@@ -1,4 +1,5 @@
 import express from "express";
+import productsRoute from "./routes/products/index";
 const port = 3000;
 const app = express();
 
@@ -6,6 +7,7 @@ app.get("/",(req,res)=>{
     res.send("hello worldd");
 })
 
+app.use("/products",productsRoute);
 
 app.listen(port,()=>{
     console.log("the server running on the port"+port);
