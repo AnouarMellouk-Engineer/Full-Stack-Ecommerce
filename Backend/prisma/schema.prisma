@@ -17,21 +17,25 @@ datasource db {
 
 // product info 
 model Product {
-  id               String         @id @default(uuid())
+  id               String        @id @default(uuid())
   name             String
   rating           Float
   price            Float
-  quantity         Int            @default(0)
-  sold             Float          @default(0)
-  isNew            Boolean        @default(true)
-  status           Float          @default(10)
+  quantity         Int           @default(0)
+  sold             Float         @default(0)
+  isNew            Boolean       @default(true)
+  status           Float         @default(10)
   categorieId      String
-  categorie        Categorie      @relation(fields: [categorieId], references: [id])
-  specificationsId String         @unique
-  specifications   Specifications @relation(fields: [specificationsId], references: [id])
+  categorie        Categorie     @relation(fields: [categorieId], references: [id])
+  specificationsId String        @unique
+  specifications   Specification @relation(fields: [specificationsId], references: [id])
   images           Image[]
-  uses             Uses[]         @relation("products-uses")
+  uses             Use[]         @relation("products-uses")
   discounts        Discount[]
+  usersCards       User[]        @relation("Cards")
+  usersFavorites   User[]        @relation("Favorites")
+  reviews          Review[]
+  items            Item[]
 }
 
 model Categorie {
@@ -41,7 +45,7 @@ model Categorie {
   products    Product[]
 }
 
-model Specifications {
+model Specification {
   id      String   @id @default(uuid())
   CPU     String
   GPU     String
@@ -61,7 +65,7 @@ model Image {
   product   Product @relation(fields: [productId], references: [id])
 }
 
-model Uses {
+model Use {
   id          String    @id @default(uuid())
   description String
   products    Product[] @relation("products-uses")
@@ -80,4 +84,61 @@ model Discount {
   code      Code    @relation(fields: [codeId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
+}
+
+// users info
+
+model User {
+  id                String    @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String    @unique
+  password          String
+  productsCards     Product[] @relation("Cards")
+  productsFavorites Product[] @relation("Favorites")
+  reviews           Review[]
+  orders            Order[]
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  comment   String
+  rating    Float?
+  createdAt DateTime @default(now())
+}
+
+// payment info
+
+model Order {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
+  status          String
+  chippingAddress String
+  amount          Float
+  paymentId       String   @unique
+  payment         Payment  @relation(fields: [paymentId], references: [id])
+  items           Item[]
+}
+
+model Payment {
+  id     String @id @default(uuid())
+  method String
+  status String
+  order  Order?
+}
+
+model Item {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
 }
