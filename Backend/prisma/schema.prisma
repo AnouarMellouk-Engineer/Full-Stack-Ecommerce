@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// 3 layers : products info / user info / payment info 
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// product info 
+model Product {
+  id               String         @id @default(uuid())
+  name             String
+  rating           Float
+  price            Float
+  quantity         Int            @default(0)
+  sold             Float          @default(0)
+  isNew            Boolean        @default(true)
+  status           Float          @default(10)
+  categorieId      String
+  categorie        Categorie      @relation(fields: [categorieId], references: [id])
+  specificationsId String         @unique
+  specifications   Specifications @relation(fields: [specificationsId], references: [id])
+  images           Image[]
+  uses             Uses[]         @relation("products-uses")
+  discounts        Discount[]
+}
+
+model Categorie {
+  id          String    @id @default(uuid())
+  name        String
+  descreption String
+  products    Product[]
+}
+
+model Specifications {
+  id      String   @id @default(uuid())
+  CPU     String
+  GPU     String
+  screen  String
+  storage Float
+  ram     Int
+  os      String
+  Weight  Float
+  product Product?
+}
+
+model Image {
+  id        String  @id @default(uuid())
+  path      String
+  isMain    Boolean
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Uses {
+  id          String    @id @default(uuid())
+  description String
+  products    Product[] @relation("products-uses")
+}
+
+model Code {
+  id        String     @id @default(uuid())
+  code      String
+  discounts Discount[]
+}
+
+model Discount {
+  id        String  @id @default(uuid())
+  value     Int // 100%
+  codeId    String
+  code      Code    @relation(fields: [codeId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
