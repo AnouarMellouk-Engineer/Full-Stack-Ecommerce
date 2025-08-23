@@ -19,7 +19,7 @@ datasource db {
 model Product {
   id               String        @id @default(uuid())
   name             String
-  rating           Float
+  rating           Float         @default(0)
   price            Float
   quantity         Int           @default(0)
   sold             Float         @default(0)
@@ -31,11 +31,15 @@ model Product {
   specifications   Specification @relation(fields: [specificationsId], references: [id])
   images           Image[]
   uses             Use[]         @relation("products-uses")
-  discounts        Discount[]
-  usersCards       User[]        @relation("Cards")
-  usersFavorites   User[]        @relation("Favorites")
-  reviews          Review[]
-  items            Item[]
+
+  /**
+   * -----------
+   */
+  discounts      Discount[]
+  usersCards     User[]     @relation("Cards")
+  usersFavorites User[]     @relation("Favorites")
+  reviews        Review[]
+  items          Item[]
 }
 
 model Categorie {
@@ -44,6 +48,8 @@ model Categorie {
   descreption String
   products    Product[]
 }
+
+// "fbfa2e83-2825-4f6d-8148-8ea692acfa80"
 
 model Specification {
   id      String   @id @default(uuid())
