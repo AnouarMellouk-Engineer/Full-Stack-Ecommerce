@@ -90,6 +90,8 @@ model Discount {
   code      Code    @relation(fields: [codeId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
+
+  @@unique([productId, codeId])
 }
 
 // users info
@@ -100,6 +102,7 @@ model User {
   lastName          String
   email             String    @unique
   password          String
+  role              String    @default("user")
   productsCards     Product[] @relation("Cards")
   productsFavorites Product[] @relation("Favorites")
   reviews           Review[]
