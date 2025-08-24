@@ -42,9 +42,6 @@ export const getProducts = async (req: Request, res: Response) => {
     res.status(200).json({ message: "fetching data OK", products: products });
   } catch (error) {
     res.status(500).send({ error: error });
-  } finally {
-    prisma.$disconnect();
-    console.log("disconnect2");
   }
 };
 
@@ -90,9 +87,6 @@ export const getProductById = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Product fetched", product });
   } catch (error) {
     res.status(500).send({ error: error });
-  } finally {
-    prisma.$disconnect();
-    console.log("disconnect2");
   }
 };
 
@@ -113,17 +107,37 @@ export const addProduct = async (req: Request, res: Response) => {
     } = req.body;
 
     // ✅ Basic validation
+    // if (
+    //   !name ||
+    //   !price ||
+    //   !categorieId ||
+    //   !specifications ||
+    //   !quantity ||
+    //   isNew === undefined ||
+    //   !status ||
+    //   !images
+    // ) {
+    //   return res.status(400).json({ error: "Missing required fields" });
+    // }
+
     if (
       !name ||
       !price ||
       !categorieId ||
       !specifications ||
-      !quantity ||
+      !images ||
       isNew === undefined ||
-      !status ||
-      !images
+      !status
     ) {
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    if (isNaN(parseFloat(price))) {
+      return res.status(400).json({ error: "Invalid price" });
+    }
+
+    if (quantity !== undefined && isNaN(parseInt(quantity))) {
+      return res.status(400).json({ error: "Invalid quantity" });
     }
 
     specifications.storage = parseFloat(specifications.storage);
@@ -143,7 +157,7 @@ export const addProduct = async (req: Request, res: Response) => {
         categorie: { connect: { id: categorieId } }, // connect existing categorie
         specifications: {
           create: specifications,
-        }, // connect existing specifications
+        }, // create new specifications
 
         // Optional: create nested data
         images: {
@@ -170,17 +184,56 @@ export const addProduct = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: "Product created successfully", product });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to create product" });
   }
 };
 
 // update product
-export const updateProduct = (req: Request, res: Response) => {
-  res.send("update product");
+export const updateProduct = async (req: Request, res: Response) => {
+  const product = req.body;
+  try {
+    // validation
+
+    // update product
+    const updatedProduct = await prisma.product.update({
+      where: {
+        id: product.id,
+      },
+      data: {
+        name: product.name,
+        rating: parseFloat(product.rating),
+        price: parseFloat(product.price),
+        quantity: parseInt(product.quantity),
+        sold: parseFloat(product.sold),
+        isNew: product.isNew,
+        status: parseFloat(product.status),
+        categorie: {
+          connect: { id: product.categorieId },
+        },
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: "update product", product: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ message: "update field" });
+  }
 };
 
 // delete product
-export const deleteProductById = (req: Request, res: Response) => {
-  res.send("delete product");
+export const deleteProductById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const deleted = await prisma.product.delete({
+      where: {
+        id,
+      },
+    });
+    res
+      .status(200)
+      .json({ message: "delete product", productDeleted: deleted });
+  } catch (error) {
+    res.status(500).json({ message: "deleted field" });
+  }
 };
