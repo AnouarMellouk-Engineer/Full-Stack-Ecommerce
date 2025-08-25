@@ -6,10 +6,12 @@ import connectPgSimple from "connect-pg-simple";
 import productsRoute from "./routes/products/index";
 import categoriesRoute from "./routes/categories/index";
 import usesRoute from "./routes/uses/index";
+import authRoute from "./routes/auth/index";
+import cartRoute from "./routes/cart/index";
 import discountsRoute from "./routes/Discounts";
 import dotenv from "dotenv";
-
 import cookieParser from "cookie-parser";
+import { auth } from "./middlewares/auth";
 
 // Load .env file into process.env
 dotenv.config();
@@ -17,7 +19,6 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
 const dbpassword = process.env.DB_PASSWORD;
-
 // Create a pg connection pool
 const pgPool = new pg.Pool({
   user: "postgres",
@@ -26,7 +27,6 @@ const pgPool = new pg.Pool({
   port: 5432,
   database: "ecommerceprisma",
 });
-
 const PgSession = connectPgSimple(session);
 
 // Use session middleware with Postgres store
@@ -48,8 +48,7 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-
-app.get("/", (req, res) => {
+app.get("/", auth, (req, res) => {
   res.send("hello worldd");
 });
 
@@ -57,20 +56,8 @@ app.use("/products", productsRoute);
 app.use("/categories", categoriesRoute);
 app.use("/uses", usesRoute);
 app.use("/discounts", discountsRoute);
-
-app.get("/card", (req, res) => {
-  // @ts-ignore
-  if (!req.session.number) {
-    // @ts-ignore
-    req.session.number = 1;
-    console.log(req.session);
-    return res.sendStatus(200);
-  }
-  console.log(req.session);
-  // @ts-ignore
-  req.session.number++;
-  return res.sendStatus(200);
-});
+app.use("/auth", authRoute);
+app.use("/cart", cartRoute);
 
 app.listen(port, () => {
   console.log("the server running on the port" + port);

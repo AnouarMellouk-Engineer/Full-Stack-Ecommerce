@@ -81,7 +81,6 @@ export const logIn = async (req: Request, res: Response) => {
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "strict",
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
     });
 
     return res.status(200).json({ message: "Login successful" });
@@ -91,10 +90,9 @@ export const logIn = async (req: Request, res: Response) => {
 };
 
 export const logOut = async (req: Request, res: Response) => {
-  res.cookie("token", "", {
+  res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    expires: new Date(0),
+    sameSite: "strict",
   });
   return res.status(200).json({ message: "Logged out successfully" });
 };

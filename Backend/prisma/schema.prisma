@@ -1,11 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-// 3 layers : products info / user info / payment info 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,31 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// product info 
+model CardSession {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_card_session_expire")
+  @@map("card_session")
+  @@ignore
+}
+
 model Product {
   id               String        @id @default(uuid())
   name             String
-  rating           Float         @default(0)
   price            Float
   quantity         Int           @default(0)
-  sold             Float         @default(0)
-  isNew            Boolean       @default(true)
-  status           Float         @default(10)
   categorieId      String
-  categorie        Categorie     @relation(fields: [categorieId], references: [id])
+  isNew            Boolean       @default(true)
+  rating           Float         @default(0)
+  sold             Float         @default(0)
   specificationsId String        @unique
-  specifications   Specification @relation(fields: [specificationsId], references: [id])
+  status           Float         @default(10)
+  discounts        Discount[]
   images           Image[]
+  items            Item[]
+  categorie        Categorie     @relation(fields: [categorieId], references: [id])
+  specifications   Specification @relation(fields: [specificationsId], references: [id])
+  reviews          Review[]
+  User_Carts       User[]        @relation("Carts")
+  usersFavorites   User[]        @relation("Favorites")
   uses             Use[]         @relation("products-uses")
-
-  /**
-   * -----------
-   */
-  discounts      Discount[]
-  usersCards     User[]     @relation("Cards")
-  usersFavorites User[]     @relation("Favorites")
-  reviews        Review[]
-  items          Item[]
 }
 
 model Categorie {
@@ -48,8 +45,6 @@ model Categorie {
   descreption String
   products    Product[]
 }
-
-// "fbfa2e83-2825-4f6d-8148-8ea692acfa80"
 
 model Specification {
   id      String   @id @default(uuid())
@@ -85,16 +80,14 @@ model Code {
 
 model Discount {
   id        String  @id @default(uuid())
-  value     Int // 100%
+  value     Int
   codeId    String
-  code      Code    @relation(fields: [codeId], references: [id])
   productId String
+  code      Code    @relation(fields: [codeId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 
   @@unique([productId, codeId])
 }
-
-// users info
 
 model User {
   id                String    @id @default(uuid())
@@ -103,36 +96,34 @@ model User {
   email             String    @unique
   password          String
   role              String    @default("user")
-  productsCards     Product[] @relation("Cards")
-  productsFavorites Product[] @relation("Favorites")
-  reviews           Review[]
   orders            Order[]
+  reviews           Review[]
+  Product_Carts     Product[] @relation("Carts")
+  productsFavorites Product[] @relation("Favorites")
 }
 
 model Review {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
   comment   String
   rating    Float?
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
-
-// payment info
 
 model Order {
   id              String   @id @default(uuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id])
   createdAt       DateTime @default(now())
   status          String
   chippingAddress String
   amount          Float
   paymentId       String   @unique
-  payment         Payment  @relation(fields: [paymentId], references: [id])
   items           Item[]
+  payment         Payment  @relation(fields: [paymentId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model Payment {
@@ -145,9 +136,9 @@ model Payment {
 model Item {
   id        String  @id @default(uuid())
   orderId   String
-  order     Order   @relation(fields: [orderId], references: [id])
   productId String
-  product   Product @relation(fields: [productId], references: [id])
   quantity  Int
   price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
