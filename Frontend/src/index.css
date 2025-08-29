@@ -6,12 +6,39 @@
   }
 }
 
-/* @layer utilities {
+@layer utilities {
+  .container {
+    width: 95%;
+    margin: auto;
+  }
 }
 
 @layer components {
-} */
+  .btn-hover:hover div,
+  .btn-hover:hover p {
+    color: #40c4d9;
+    transition: 0.3s;
+  }
+}
 
 @theme {
   --font-poppins: "Inter", sans-serif;
+  --font-main: "Oswald", sans-serif;
+
+  --color-primary: #40c4d9; /* Light teal blue */
+  --color-primary-dark: #00acc1; /* Darker accent for hover/focus */
+  --color-primary-light: #f0f9fb; /* Soft background blue */
+
+  --color-secondary: #4caf50; /* Green (used in status icons, success states) */
+  --color-secondary-dark: #388e3c;
+
+  --color-neutral-text: #1e1e1e; /* Main text (almost black) */
+  --color-neutral-secondary: #6b7280; /* Muted gray text */
+  --color-neutral-border: #e5e7eb;
+  --color-neutral-background: #f9fafb; /* Page background */
+  --color-neutral-card: #ffffff; /* Card backgrounds */
+
+  --color-alert-danger: #e53935; /* Cancel button / errors */
+  --color-alert-warning: #fb8c00; /* Warnings */
+  --color-alert-info: #2196f3; /* Info labels  (green)*/
 }
