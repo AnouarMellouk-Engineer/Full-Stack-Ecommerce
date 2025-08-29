@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply font-poppins;
+  }
+}
+
+/* @layer utilities {
+}
+
+@layer components {
+} */
+
+@theme {
+  --font-poppins: "Inter", sans-serif;
+}
