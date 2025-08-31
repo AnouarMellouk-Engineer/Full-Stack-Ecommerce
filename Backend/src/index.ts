@@ -9,9 +9,11 @@ import usesRoute from "./routes/uses/index";
 import authRoute from "./routes/auth/index";
 import cartRoute from "./routes/cart/index";
 import discountsRoute from "./routes/Discounts";
+import brandsRoute from "./routes/brands/index";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { auth } from "./middlewares/auth";
+import cors from "cors";
 
 // Load .env file into process.env
 dotenv.config();
@@ -52,12 +54,22 @@ app.get("/", auth, (req, res) => {
   res.send("hello worldd");
 });
 
+// allow requests from frontend (5173)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use("/products", productsRoute);
 app.use("/categories", categoriesRoute);
 app.use("/uses", usesRoute);
 app.use("/discounts", discountsRoute);
 app.use("/auth", authRoute);
 app.use("/cart", cartRoute);
+app.use("/brand", brandsRoute);
 
 app.listen(port, () => {
   console.log("the server running on the port" + port);

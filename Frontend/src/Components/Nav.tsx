@@ -8,10 +8,10 @@ import {
 
 const Nav = () => {
   return (
-    <nav className="  py-2 sm:py-4   ">
+    <nav className="  py-2 sm:py-4  shadow-lg shadow-gray-300/60  ">
       <div className="container flex justify-between sm:items-center ">
         <div className="flex flex-col justify-between sm:justify-normal gap-3.5 sm:flex-row flex-1 sm:flex-2">
-          <h1 className="text-2xl text-primary font-bold font-main lg:text-3xl ">
+          <h1 className="text-2xl text-primary font-bold  lg:text-3xl ">
             TechNova
           </h1>
 
@@ -43,7 +43,7 @@ const Nav = () => {
           <div className="flex items-center gap-5">
             {/* lang  */}
             <div className="flex items-center gap-1 lg:border-r-1 lg:border-neutral-border lg:pr-2 cursor-pointer">
-              <div className="overflow-hidden">
+              <div className="overflow-hidden ">
                 <img
                   src="./src/assets/lang/icons8-usa-96.png"
                   alt=""

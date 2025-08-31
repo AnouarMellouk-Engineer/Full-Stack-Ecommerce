@@ -36,6 +36,65 @@ export const getProducts = async (req: Request, res: Response) => {
             },
           },
         },
+        brand: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({ message: "fetching data OK", products: products });
+  } catch (error) {
+    res.status(500).send({ error: error });
+  }
+};
+
+// find top 4 products
+export const getTopProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        quantity: { gt: 10 },
+      },
+
+      take: 4,
+      include: {
+        categorie: {
+          select: {
+            name: true,
+          },
+        },
+        specifications: true,
+        images: {
+          select: {
+            path: true,
+            isMain: true,
+          },
+        },
+        uses: {
+          select: {
+            description: true,
+          },
+        },
+        reviews: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+        brand: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
       },
     });
 
@@ -82,6 +141,12 @@ export const getProductById = async (req: Request, res: Response) => {
             },
           },
         },
+        brand: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
       },
     });
     res.status(200).json({ message: "Product fetched", product });
@@ -104,6 +169,7 @@ export const addProduct = async (req: Request, res: Response) => {
       specifications,
       images,
       usesId,
+      brand,
     } = req.body;
 
     // ✅ Basic validation
@@ -173,6 +239,11 @@ export const addProduct = async (req: Request, res: Response) => {
               })),
             }
           : undefined,
+        brand: {
+          connect: {
+            name: brand,
+          },
+        },
       },
       include: {
         categorie: { select: { name: true } },
@@ -184,7 +255,9 @@ export const addProduct = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: "Product created successfully", product });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create product" });
+    res
+      .status(500)
+      .json({ error: "Failed to create product", errorMsg: error });
   }
 };
 
@@ -230,10 +303,10 @@ export const deleteProductById = async (req: Request, res: Response) => {
         id,
       },
     });
-    res
+    return res
       .status(200)
       .json({ message: "delete product", productDeleted: deleted });
   } catch (error) {
-    res.status(500).json({ message: "deleted field" });
+    return res.status(500).json({ message: "deleted field" });
   }
 };

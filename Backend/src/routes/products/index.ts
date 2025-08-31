@@ -5,12 +5,13 @@ import {
   addProduct,
   updateProduct,
   deleteProductById,
+  getTopProducts,
 } from "./controller";
 
 const router = Router();
 
 router.get("/", getProducts);
-
+router.get("/top", getTopProducts);
 router.get("/:id", getProductById);
 
 router.post("/", addProduct);

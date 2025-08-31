@@ -11,9 +11,9 @@ export const getCategories = async (req: Request, res: Response) => {
 };
 
 export const addCategorie = async (req: Request, res: Response) => {
-  const { name, descreption } = req.body;
+  const { name, descreption, image } = req.body;
 
-  if (!name || !descreption) {
+  if (!name || !descreption || !image) {
     res.status(500).send({ massage: "must field all the inputs " });
   }
 
@@ -22,6 +22,7 @@ export const addCategorie = async (req: Request, res: Response) => {
       data: {
         name,
         descreption,
+        image,
       },
     });
     res.status(201).json({ categories: data });

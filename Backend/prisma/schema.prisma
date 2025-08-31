@@ -11,7 +11,7 @@ model CardSession {
   sid    String   @id @db.VarChar
   sess   Json     @db.Json
   expire DateTime @db.Timestamp(6)
-  
+
   @@index([expire], map: "IDX_card_session_expire")
   @@map("card_session")
   @@ignore
@@ -37,12 +37,22 @@ model Product {
   User_Carts       User[]        @relation("Carts")
   usersFavorites   User[]        @relation("Favorites")
   uses             Use[]         @relation("products-uses")
+  brandId          String
+  brand            Brand         @relation(fields: [brandId], references: [id])
+}
+
+model Brand {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  image    String
+  products Product[]
 }
 
 model Categorie {
   id          String    @id @default(uuid())
-  name        String
+  name        String    @unique
   descreption String
+  image       String
   products    Product[]
 }
 

@@ -8,7 +8,7 @@
 
 @layer utilities {
   .container {
-    width: 95%;
+    width: 80%;
     margin: auto;
   }
 }
@@ -21,6 +21,16 @@
   }
 }
 
+/*
+Primary: #111827 (Deep black/charcoal)
+
+Secondary: #6B7280 (Gray for UI elements)
+
+Accent: #E11D48 (Luxury red / call-to-action)
+
+Background: #FFFFFF (Pure white for elegance)
+
+ Text: #1F2937 (Dark gray) */
 @theme {
   --font-poppins: "Inter", sans-serif;
   --font-main: "Oswald", sans-serif;
@@ -28,6 +38,8 @@
   --color-primary: #40c4d9; /* Light teal blue */
   --color-primary-dark: #00acc1; /* Darker accent for hover/focus */
   --color-primary-light: #f0f9fb; /* Soft background blue */
+
+  /* --color-primary: #111827; */
 
   --color-secondary: #4caf50; /* Green (used in status icons, success states) */
   --color-secondary-dark: #388e3c;
@@ -38,7 +50,10 @@
   --color-neutral-background: #f9fafb; /* Page background */
   --color-neutral-card: #ffffff; /* Card backgrounds */
 
+  /* --color-neutral-background: #ffffff;
+  --color-neutral-card: #6b7280; */
+
   --color-alert-danger: #e53935; /* Cancel button / errors */
   --color-alert-warning: #fb8c00; /* Warnings */
-  --color-alert-info: #2196f3; /* Info labels  (green)*/
+  --color-alert-info: #2196f3; /*Info labels  (green) */
 }
