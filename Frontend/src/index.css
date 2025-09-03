@@ -19,6 +19,10 @@
     color: #40c4d9;
     transition: 0.3s;
   }
+
+  .inputfield {
+    @apply bg-white border-1 border-neutral-border px-2 py-2.5 outline-none rounded-md;
+  }
 }
 
 /*

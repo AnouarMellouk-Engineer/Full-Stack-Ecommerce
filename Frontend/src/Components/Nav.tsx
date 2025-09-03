@@ -6,9 +6,11 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+import { Link } from "react-router-dom";
+
 const Nav = () => {
   return (
-    <nav className="  py-2 sm:py-4  shadow-lg shadow-gray-300/60  ">
+    <nav className="  py-2 sm:py-4  shadow-md shadow-gray-300/60 fixed top-0 left-0 z-40 w-full bg-white  ">
       <div className="container flex justify-between sm:items-center ">
         <div className="flex flex-col justify-between sm:justify-normal gap-3.5 sm:flex-row flex-1 sm:flex-2">
           <h1 className="text-2xl text-primary font-bold  lg:text-3xl ">
@@ -56,12 +58,14 @@ const Nav = () => {
               </div>
             </div>
             {/* connect  */}
-            <div className="flex items-center lg:bg-neutral-background rounded-sm  lg:px-3 lg:py-2 cursor-pointer btn-hover  ">
-              <div className="   ">
-                <UserRoundPlus size={24} />
+            <Link to="/auth" className="hidden lg:block text-sm  ">
+              <div className="flex items-center lg:bg-neutral-background rounded-sm  lg:px-3 lg:py-2 cursor-pointer btn-hover  ">
+                <div className="   ">
+                  <UserRoundPlus size={24} />
+                </div>{" "}
+                <p> Connect</p>
               </div>
-              <p className="hidden lg:block text-sm  "> Connect</p>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

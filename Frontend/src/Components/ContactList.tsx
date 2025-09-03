@@ -19,7 +19,9 @@ const ContactList = () => {
     },
   ];
 
-  const contactList = contactInfo.map((c) => <ContactCart contact={c} />);
+  const contactList = contactInfo.map((c) => (
+    <ContactCart contact={c} key={c.title} />
+  ));
   return (
     <div className="flex flex-col md:flex-row items-center justify-center gap-8">
       {contactList}
