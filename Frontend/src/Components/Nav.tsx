@@ -4,11 +4,33 @@ import {
   Heart,
   UserRoundPlus,
   ChevronDown,
+  UserRoundCog,
+  LogOut,
+  Settings,
+  Truck,
 } from "lucide-react";
-
+import { useAuth } from "../providers/AuthProvider";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Nav = () => {
+  const { user, setUser } = useAuth();
+  const [show, setShow] = useState(false);
+
+  const logOut = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/auth/logOut", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await response.json();
+      alert(data.message);
+      setUser(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <nav className="  py-2 sm:py-4  shadow-md shadow-gray-300/60 fixed top-0 left-0 z-40 w-full bg-white  ">
       <div className="container flex justify-between sm:items-center ">
@@ -42,7 +64,7 @@ const Nav = () => {
               <Heart size={24} />
             </div>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 relative">
             {/* lang  */}
             <div className="flex items-center gap-1 lg:border-r-1 lg:border-neutral-border lg:pr-2 cursor-pointer">
               <div className="overflow-hidden ">
@@ -57,15 +79,59 @@ const Nav = () => {
                 <ChevronDown size={19} />
               </div>
             </div>
-            {/* connect  */}
-            <Link to="/auth" className="hidden lg:block text-sm  ">
-              <div className="flex items-center lg:bg-neutral-background rounded-sm  lg:px-3 lg:py-2 cursor-pointer btn-hover  ">
-                <div className="   ">
-                  <UserRoundPlus size={24} />
-                </div>{" "}
-                <p> Connect</p>
+            {/* connect  | Profile */}
+            {user ? (
+              <div>
+                <div
+                  onClick={() => {
+                    setShow(!show);
+                  }}
+                  className="flex items-center justify-center gap-2 hover:bg-gray-100 py-1.5 px-1 rounded-md cursor-pointer duration-300 "
+                >
+                  <p className="rounded-full  w-9 h-9 text-sm flex justify-center items-center ">
+                    {/* {user.firstName[0] + "" + user.firstName[1]} */}
+                    <UserRoundCog size={24} />
+                  </p>
+                  <div className="hidden lg:block">
+                    <p className="text-xs text-neutral-secondary ">welcom</p>
+                    {/* <p className="text-sm font-bold">{user.firstName}</p> */}
+                    <p className="text-sm font-bold">name</p>
+                  </div>
+                  <ChevronDown size={19} className="hidden lg:block" />
+                </div>
+                <div
+                  className={`absolute top-28 sm:top-20  border-1 border-neutral-border bg-neutral-card z-50 left-0 py-3 px-2 sm:px-4 rounded-md w-full ${
+                    show ? "flex" : "hidden"
+                  } flex-col justify-start items-start gap-5 `}
+                >
+                  <div className="flex items-center justify-start gap-1.5 sm:gap-3 text-neutral-secondary hover:text-black duration-300 cursor-pointer">
+                    <Truck size={19} />
+                    <p>Orders</p>
+                  </div>
+                  <div className="flex items-center justify-start gap-1.5 sm:gap-3 text-neutral-secondary hover:text-black duration-300 cursor-pointer">
+                    <Settings size={19} />
+                    <p>Settings</p>
+                  </div>
+
+                  <div
+                    className="flex items-center justify-start gap-1.5 sm:gap-3 text-neutral-secondary hover:text-black duration-300 cursor-pointer "
+                    onClick={logOut}
+                  >
+                    <LogOut size={19} />
+                    <p>Log out</p>
+                  </div>
+                </div>
               </div>
-            </Link>
+            ) : (
+              <Link to="/auth" className="hidden lg:block text-sm  ">
+                <div className="flex items-center lg:bg-neutral-background rounded-sm  lg:px-3 lg:py-2 cursor-pointer btn-hover  ">
+                  <div className="   ">
+                    <UserRoundPlus size={24} />
+                  </div>{" "}
+                  <p> Connect</p>
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </div>

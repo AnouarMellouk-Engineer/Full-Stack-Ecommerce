@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAuth } from "../providers/AuthProvider";
 const Auth = () => {
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
+
   const [login, setLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState({ status: false, message: "" });
@@ -52,6 +54,13 @@ const Auth = () => {
         setResult({ status: true, message: datalist.message });
         setData({ firstName: "", lastName: "", email: "", password: "" }); // reset form
       } else {
+        setUser({
+          firstName: datalist.findUser.firstName,
+          lastName: datalist.findUser.lastName,
+          email: datalist.findUser.email,
+          role: datalist.findUser.role,
+        });
+        alert("login OK ");
         navigate("/");
       }
     } catch (error) {
@@ -64,6 +73,10 @@ const Auth = () => {
   const handelChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="bg-white w-full h-screen flex justify-center items-center">
@@ -207,7 +220,10 @@ const Auth = () => {
           {login ? "Don't Have account?" : "Already have an account?"}
           <span
             className="text-primary font-medium hover:underline cursor-pointer"
-            onClick={() => setLogin(!login)}
+            onClick={() => {
+              setLogin(!login);
+              setResult({ status: false, message: "" });
+            }}
           >
             {login ? " Register" : " Log in"}
           </span>

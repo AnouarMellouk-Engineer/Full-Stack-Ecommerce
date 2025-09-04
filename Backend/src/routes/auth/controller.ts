@@ -83,7 +83,7 @@ export const logIn = async (req: Request, res: Response) => {
       sameSite: "strict",
     });
 
-    return res.status(200).json({ message: "Login successful" });
+    return res.status(200).json({ message: "Login successful", findUser });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong, try again" });
   }
@@ -95,4 +95,18 @@ export const logOut = async (req: Request, res: Response) => {
     sameSite: "strict",
   });
   return res.status(200).json({ message: "Logged out successfully" });
+};
+
+export const me = (req: Request, res: Response) => {
+  const token = req.cookies.token;
+  const JWT_SECRET = process.env.JWT_SECRET || "mysecretkey123";
+  if (!token) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+  try {
+    const data = jwt.verify(token, JWT_SECRET);
+    return res.status(200).json({ data });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
 };

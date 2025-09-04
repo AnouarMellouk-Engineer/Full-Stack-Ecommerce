@@ -10,7 +10,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const user = jwt.verify(jwtToken, JWT_SECRET);
-    console.log(user);
+
     return res.sendStatus(200);
 
     // req.user =  {
