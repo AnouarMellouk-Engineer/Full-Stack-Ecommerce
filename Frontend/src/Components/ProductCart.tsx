@@ -1,6 +1,10 @@
-const ProductCart = ({ product }) => {
+const ProductCart = ({ product, main }) => {
   return (
-    <div className="border border-neutral-border bg-neutral-card rounded-2xl sm:w-[45%] lg:w-[24%] mb-5 duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1 overflow-hidden flex flex-col">
+    <div
+      className={`border border-neutral-border bg-neutral-card rounded-2xl sm:w-[45%] ${
+        main ? "lg:w-[24%]" : "lg:w-[32%]"
+      } mb-5 duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1 overflow-hidden flex flex-col`}
+    >
       {/* Product Image */}
       <div className="w-full overflow-hidden">
         <img
@@ -13,7 +17,7 @@ const ProductCart = ({ product }) => {
       </div>
 
       {/* Info Section */}
-      <div className="px-3 py-4 border-t border-neutral-border bg-neutral-background flex flex-col flex-1">
+      <div className="px-3 py-2 border-t border-neutral-border bg-neutral-background flex flex-col flex-1">
         {/* Top Row */}
         <div className="flex items-center justify-between mb-2">
           <div className="w-7 overflow-hidden">
@@ -41,6 +45,19 @@ const ProductCart = ({ product }) => {
               : "available now"}
           </p>
         </div>
+      </div>
+      <div className="px-3 py-4 border-t border-neutral-border bg-neutral-background ">
+        <div className="mb-2.5 flex justify-start items-start flex-wrap gap-1.5">
+          <p className="text-xs text-neutral-secondary  px-1 py-1 rounded-xl bg-white">
+            INTEl
+          </p>
+          <p className="text-xs px-1 text-neutral-secondary py-1 rounded-xl bg-white">
+            motherboard
+          </p>
+        </div>
+        <button className="px-4 py-2.5 rounded-md bg-primary text-white w-full hover:bg-primary-dark  cursor-pointer">
+          add to cart
+        </button>
       </div>
     </div>
   );

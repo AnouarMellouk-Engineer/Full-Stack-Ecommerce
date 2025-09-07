@@ -1,7 +1,7 @@
 import ProductCart from "./ProductCart";
 import { useState, useEffect } from "react";
 
-const ProductsSection = ({ title }: { title: string }) => {
+const ShopList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -17,20 +17,15 @@ const ProductsSection = ({ title }: { title: string }) => {
     }
     getProducts();
   }, []);
-
   return (
-    <div className="mt-24">
-      <div className="flex items-center justify-between mb-12">
-        <h2 className="text-xl font-bold   ">{title}</h2>
-        <p className="text-primary text-lg">see All</p>
-      </div>
-      <div className="flex items-stretch justify-between flex-wrap">
-        {products.map((product) => (
-          <ProductCart product={product} main={true} key={product.id} />
-        ))}
-      </div>
+    <div className="flex  flex-wrap justify-between  items-stretch mt-7">
+      {products.map((product) => (
+        <>
+          <ProductCart product={product} main={false} key={product.id} />
+        </>
+      ))}
     </div>
   );
 };
 
-export default ProductsSection;
+export default ShopList;

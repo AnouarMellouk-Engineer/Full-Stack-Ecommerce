@@ -124,12 +124,18 @@ const Nav = () => {
               </div>
             ) : (
               <Link to="/auth" className="hidden lg:block text-sm  ">
-                <div className="flex items-center lg:bg-neutral-background rounded-sm  lg:px-3 lg:py-2 cursor-pointer btn-hover  ">
+                {/* <div className="flex items-center lg:bg-neutral-background rounded-sm  lg:px-3 lg:py-2 cursor-pointer btn-hover  ">
                   <div className="   ">
                     <UserRoundPlus size={24} />
                   </div>{" "}
                   <p> Connect</p>
-                </div>
+                </div> */}
+                <button className="px-4 py-2.5 rounded-md bg-primary text-white w-full hover:bg-primary-dark  cursor-pointer flex items-center">
+                  <div className="   ">
+                    <UserRoundPlus size={24} />
+                  </div>{" "}
+                  <p> Connect</p>
+                </button>
               </Link>
             )}
           </div>
